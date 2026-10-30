@@ -20,7 +20,15 @@ const timer = setInterval(() => {
 }, REFRESH_MS);
 timer.unref();
 
-await app.listen({ port, host });
+try {
+  await app.listen({ port, host });
+} catch (err) {
+  const inUse = (err as NodeJS.ErrnoException).code === "EADDRINUSE";
+  app.log.error(inUse ? `Port ${port} is already in use. Stop the other server or set PORT, e.g. PORT=3001 npm start` : err);
+  clearInterval(timer);
+  store.close();
+  process.exit(1);
+}
 
 let shuttingDown = false;
 async function shutdown(signal: string) {
