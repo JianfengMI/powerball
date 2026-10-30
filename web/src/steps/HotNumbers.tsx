@@ -60,6 +60,7 @@ function FrequencyChart({
         borderDash: [6, 4],
         pointRadius: 0,
         borderWidth: 2,
+        pointStyle: "line",
         order: 0,
       },
       {
@@ -71,7 +72,16 @@ function FrequencyChart({
         ),
         borderColor: isRed ? colors.accent : colors.whiteBorder,
         borderWidth: 1,
+        pointStyle: "rect",
         order: 1,
+      },
+      {
+        // Legend entry only: explains the gold bars.
+        type: "bar" as const,
+        label: highlight.length === 1 ? "Hottest" : `${highlight.length} hottest`,
+        data: [],
+        backgroundColor: colors.gold,
+        pointStyle: "rect",
       },
     ],
   };
@@ -112,6 +122,7 @@ function SumsChart({ sums }: { sums: SumsResponse }) {
         backgroundColor: colors.expected,
         pointRadius: 0,
         borderWidth: 2,
+        pointStyle: "line",
         tension: 0.35,
         order: 0,
       },
@@ -122,6 +133,7 @@ function SumsChart({ sums }: { sums: SumsResponse }) {
         backgroundColor: colors.white,
         borderColor: colors.whiteBorder,
         borderWidth: 1,
+        pointStyle: "rect",
         order: 1,
       },
     ],

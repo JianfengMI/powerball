@@ -40,7 +40,7 @@ function readColors(): ThemeColors {
     accent: v("--accent"),
     white: v("--chart-white"),
     whiteBorder: v("--chart-white-border"),
-    expected: v("--gold"),
+    expected: v("--chart-expected"),
     gold: v("--gold"),
     green: v("--match"),
   };

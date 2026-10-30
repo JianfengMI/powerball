@@ -57,8 +57,8 @@ function SpentVsWonChart({ check, draws }: { check: CheckResponse; draws: DrawsR
         data={{
           labels,
           datasets: [
-            { label: "Spent", data: spent, borderColor: colors.accent, backgroundColor: colors.accent, pointRadius: 0, borderWidth: 2 },
-            { label: "Won", data: won, borderColor: colors.green, backgroundColor: colors.green, pointRadius: 0, borderWidth: 2, stepped: true },
+            { label: "Spent", data: spent, borderColor: colors.accent, backgroundColor: colors.accent, pointRadius: 0, borderWidth: 2, pointStyle: "line" },
+            { label: "Won", data: won, borderColor: colors.green, backgroundColor: colors.green, pointRadius: 0, borderWidth: 2, stepped: true, pointStyle: "line" },
           ],
         }}
         options={{

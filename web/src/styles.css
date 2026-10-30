@@ -22,6 +22,7 @@
   --chart-grid: #263055;
   --chart-white: #dfe3f0;
   --chart-white-border: #9aa3c0;
+  --chart-expected: #7cc4ff;
   --shadow: 0 10px 30px rgb(0 0 0 / 0.35);
   --radius: 14px;
   --gutter: 16px;
@@ -47,6 +48,7 @@
     --chart-grid: #e1e4ee;
     --chart-white: #8f99b8;
     --chart-white-border: #6b7698;
+    --chart-expected: #1d4ed8;
     --shadow: 0 6px 20px rgb(20 30 60 / 0.12);
   }
 }
@@ -285,6 +287,8 @@ main,
 .ball--red {
   color: #fff;
   background: radial-gradient(circle at 32% 30%, var(--ball-red-1), var(--ball-red-2) 75%);
+  /* The gradient is about #e34356 behind the number (4.0:1 with white); the shadow lifts small numbers above AA. */
+  text-shadow: 0 1px 2px rgb(80 0 10 / 0.7);
 }
 .ball--empty {
   background: transparent;

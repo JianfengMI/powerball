@@ -34,7 +34,7 @@ export function baseOptions(c: ThemeColors, reducedMotion: boolean): ChartOption
     animation: reducedMotion ? false : { duration: 600 },
     interaction: { mode: "index", intersect: false },
     plugins: {
-      legend: { labels: { color: c.text, boxWidth: 14 } },
+      legend: { labels: { color: c.text, boxWidth: 14, usePointStyle: true } },
       tooltip: { enabled: true },
     },
     scales: {

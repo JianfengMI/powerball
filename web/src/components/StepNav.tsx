@@ -16,22 +16,30 @@ export function StepNav() {
   const [current, setCurrent] = useState<string>(STEPS[0].id);
 
   useEffect(() => {
-    if (typeof IntersectionObserver === "undefined") return;
-    const visible = new Map<string, number>();
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) visible.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0);
-        // The topmost step that is meaningfully on screen.
-        const first = STEPS.find((s) => (visible.get(s.id) ?? 0) > 0);
-        if (first) setCurrent(first.id);
-      },
-      { rootMargin: "-30% 0px -55% 0px", threshold: [0, 0.01] },
-    );
-    for (const s of STEPS) {
-      const el = document.getElementById(s.id);
-      if (el) obs.observe(el);
-    }
-    return () => obs.disconnect();
+    // Looks the sections up on every check rather than observing elements once: lazy-loaded
+    // steps replace their placeholder sections after mount.
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const line = window.innerHeight * 0.35;
+      let active: string = STEPS[0].id;
+      for (const s of STEPS) {
+        const el = document.getElementById(s.id);
+        if (el && el.getBoundingClientRect().top <= line) active = s.id;
+      }
+      setCurrent(active);
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      cancelAnimationFrame(frame);
+    };
   }, []);
 
   const currentIndex = STEPS.findIndex((s) => s.id === current);
