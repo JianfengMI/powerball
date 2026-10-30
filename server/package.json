@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch --disable-warning=ExperimentalWarning src/index.ts",
     "start": "tsx --disable-warning=ExperimentalWarning src/index.ts",
-    "test": "vitest run --root .. server",
+    "test": "vitest run --root .. server/",
     "typecheck": "tsc -p . --noEmit"
   },
   "engines": {

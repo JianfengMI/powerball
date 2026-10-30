@@ -10,7 +10,7 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc -p shared --noEmit"
+    "typecheck": "tsc -p shared --noEmit && npm run typecheck -w server"
   },
   "engines": {
     "node": ">=20"

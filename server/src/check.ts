@@ -28,21 +28,12 @@ export function parseTicketQuery(query: Record<string, unknown>): { ticket: Tick
   return error ? { error } : { ticket };
 }
 
-/**
- * CheckResponse plus fields the lead is adding to shared/src/api.ts on main
- * (ticket echo and per-draw win history). Drop this once shared has them.
- */
-export type CheckResult = CheckResponse & {
-  ticket: { whites: number[]; powerball: number };
-  winHistory: { date: string; tierId: string }[];
-};
-
 /** Checks a ticket against every draw. bestWin is the best tier hit, at its earliest date. */
-export function checkHistory(ticket: Ticket, draws: readonly DrawRecord[]): CheckResult {
+export function checkHistory(ticket: Ticket, draws: readonly DrawRecord[]): CheckResponse {
   const counts = new Map<string, number>(PRIZE_TIERS.map((t) => [t.id, 0]));
   const tierRank = new Map<string, number>(PRIZE_TIERS.map((t, i) => [t.id, i]));
   const jackpotDates: string[] = [];
-  const winHistory: CheckResult["winHistory"] = [];
+  const winHistory: CheckResponse["winHistory"] = [];
   let totalWon = 0;
   let bestWin: CheckResponse["bestWin"] = null;
 
