@@ -1,5 +1,14 @@
 # Powerball Odds & Education Tool — Plan
 
+## Status (2026-10-30)
+M1–M5 are complete and the site runs locally (`npm run build && npm start`, see README.md). Deployment to Render is deferred by decision: `render.yaml` is ready, but there is no GitHub remote yet.
+
+Possible follow-ups:
+- Number-grid buttons are 32px on phones. That passes WCAG 2.2 AA (24px) but is below the 44px platform guideline.
+- Not yet tested with a screen reader.
+- Deploy: push to GitHub, connect Render, and check Render's current free-tier limits first.
+- The ML "can't beat chance" demo (see Later ideas).
+
 ## Goal
 An educational website that answers three questions:
 1. **What are the odds, really?** The math behind them, made intuitive.
