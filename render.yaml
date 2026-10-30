@@ -1,0 +1,13 @@
+# Render Blueprint: one free-tier web service serving the API and the built frontend.
+services:
+  - type: web
+    name: powerball
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run build -w web
+    startCommand: npm start -w server
+    healthCheckPath: /api/stats/summary
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
