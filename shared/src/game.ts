@@ -18,7 +18,7 @@ export interface PrizeTier {
 }
 
 /** Official prize tiers, best first. Fixed prizes exclude Power Play multipliers. */
-export const PRIZE_TIERS: readonly PrizeTier[] = [
+export const PRIZE_TIERS = [
   { id: "5+PB", whites: 5, powerball: true, prize: "jackpot", label: "5 + Powerball" },
   { id: "5", whites: 5, powerball: false, prize: 1_000_000, label: "5 white balls" },
   { id: "4+PB", whites: 4, powerball: true, prize: 50_000, label: "4 + Powerball" },
@@ -28,8 +28,10 @@ export const PRIZE_TIERS: readonly PrizeTier[] = [
   { id: "2+PB", whites: 2, powerball: true, prize: 7, label: "2 + Powerball" },
   { id: "1+PB", whites: 1, powerball: true, prize: 4, label: "1 + Powerball" },
   { id: "0+PB", whites: 0, powerball: true, prize: 4, label: "Powerball only" },
-];
+] as const satisfies readonly PrizeTier[];
+
+export type TierId = (typeof PRIZE_TIERS)[number]["id"];
 
 export function findTier(whites: number, powerball: boolean): PrizeTier | null {
-  return PRIZE_TIERS.find((t) => t.whites === whites && t.powerball === powerball) ?? null;
+  return PRIZE_TIERS.find((t: PrizeTier) => t.whites === whites && t.powerball === powerball) ?? null;
 }

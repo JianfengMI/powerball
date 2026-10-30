@@ -39,7 +39,9 @@ export function randomInt(n: number, rng: RandomSource = defaultSource): number 
 
 /** Picks `count` distinct numbers from 1..max, sorted ascending (partial Fisher-Yates shuffle). */
 export function sampleDistinct(count: number, max: number, rng: RandomSource = defaultSource): number[] {
-  if (count > max) throw new RangeError(`sampleDistinct: cannot pick ${count} from ${max}`);
+  if (!Number.isInteger(count) || !Number.isInteger(max) || count < 0 || count > max) {
+    throw new RangeError(`sampleDistinct: cannot pick ${count} from ${max}`);
+  }
   const pool = Array.from({ length: max }, (_, i) => i + 1);
   for (let i = 0; i < count; i++) {
     const j = i + randomInt(max - i, rng);

@@ -35,6 +35,7 @@ describe("combinations", () => {
   it("returns 0 for impossible choices", () => {
     expect(combinations(5, 6)).toBe(0);
     expect(combinations(5, -1)).toBe(0);
+    expect(combinations(5.5, 2)).toBe(0);
   });
 });
 

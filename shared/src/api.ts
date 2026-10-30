@@ -17,7 +17,7 @@ export interface DrawsResponse {
   draws: DrawRecord[];
 }
 
-/** GET /api/stats/summary */
+/** GET /api/stats/summary. drawCount is never 0: the server falls back to the bundled seed data. */
 export interface SummaryResponse {
   drawCount: number;
   firstDate: string;
@@ -35,13 +35,18 @@ export interface NumberFrequency {
   expected: number;
 }
 
+/**
+ * Pearson chi-square goodness-of-fit against a uniform distribution.
+ * For white balls the statistic is multiplied by (69-1)/(69-5): the 5 whites in a draw
+ * are drawn without replacement, so raw counts are negatively correlated.
+ */
 export interface ChiSquareResult {
   statistic: number;
   degreesOfFreedom: number;
   pValue: number;
 }
 
-/** GET /api/stats/frequency */
+/** GET /api/stats/frequency. All-time counts; the site's "hot" numbers are the most frequent here. */
 export interface FrequencyResponse {
   drawCount: number;
   whites: NumberFrequency[]; // numbers 1..69 in order
@@ -65,8 +70,9 @@ export interface GapInfo {
   number: number;
   /** Draws since this number last appeared (0 = appeared in the latest draw), null if never. */
   drawsSinceLast: number | null;
+  /** YYYY-MM-DD of the most recent draw containing this number. */
   lastSeen: string | null;
-  /** Longest run of consecutive draws without this number. */
+  /** Longest run of consecutive draws without this number, including the current run. Equals drawCount if never drawn. */
   longestGap: number;
 }
 
@@ -81,15 +87,21 @@ export interface GapsResponse {
  * GET /api/check?whites=1,2,3,4,5&pb=6
  * The ticket checked against every real draw. Jackpot amounts are not in the dataset,
  * so jackpot wins are listed by date and excluded from totalWon.
+ * An invalid ticket returns 400 with the ticketError message.
  */
 export interface CheckResponse {
   drawCount: number;
+  /** The ticket as checked, whites sorted ascending. */
+  ticket: { whites: number[]; powerball: number };
+  /** drawCount × TICKET_PRICE */
   totalSpent: number;
   /** Fixed prizes only (no jackpot, no Power Play). */
   totalWon: number;
   /** One entry per prize tier (PRIZE_TIERS order), including tiers with count 0. */
   wins: { tierId: string; count: number; prize: number | "jackpot" }[];
   jackpotDates: string[];
-  /** The single best result, or null if the ticket never won anything. */
+  /** Every draw this ticket won a prize in, oldest first. */
+  winHistory: { date: string; tierId: string }[];
+  /** The single best result (may be the jackpot), earliest if tied, or null if the ticket never won anything. */
   bestWin: { tierId: string; date: string } | null;
 }
