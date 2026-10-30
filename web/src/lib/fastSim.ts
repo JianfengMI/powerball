@@ -16,7 +16,7 @@
 import type { Ticket } from "@powerball/shared";
 
 /** Fills a buffer with uniform random 32-bit values. Defaults to crypto.getRandomValues. */
-export type FillRandom = (buffer: Int32Array) => void;
+export type FillRandom = (buffer: Int32Array<ArrayBuffer>) => void;
 
 export const cryptoFill: FillRandom = (buffer) => {
   globalThis.crypto.getRandomValues(buffer);

@@ -42,7 +42,9 @@ export async function fetchJson<T>(path: string, signal?: AbortSignal): Promise<
     body = JSON.parse(text);
   } catch {
     throw new ApiRequestError(
-      res.ok ? "The data server sent an unexpected response." : `The data server returned an error (${res.status}).`,
+      res.ok
+        ? "The data server sent an unexpected response."
+        : "Couldn't reach the data server. It may be down or starting up (this can take up to a minute).",
       res.status,
     );
   }
