@@ -3,7 +3,9 @@
   "private": true,
   "type": "module",
   "workspaces": [
-    "shared"
+    "shared",
+    "server",
+    "web"
   ],
   "scripts": {
     "test": "vitest run",
