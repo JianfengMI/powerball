@@ -3,3 +3,4 @@ export * from "./odds";
 export * from "./rng";
 export * from "./ticket";
 export * from "./api";
+export * from "./stats";

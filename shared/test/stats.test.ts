@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { sampleDistinct, type RandomSource } from "@powerball/shared";
-import { chiSquareSurvival, chiSquareUniformTest, logGamma, regularizedGammaQ } from "../src/stats/chiSquare";
+import { chiSquareSurvival, chiSquareUniformTest, logGamma, regularizedGammaQ, sampleDistinct, type RandomSource } from "../src";
 
 /** Deterministic 32-bit PRNG (mulberry32) so the simulation test is reproducible. */
 function seeded(seed: number): RandomSource {

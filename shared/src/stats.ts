@@ -1,7 +1,8 @@
 // Chi-square goodness-of-fit test, with the survival function implemented via the
 // regularized upper incomplete gamma function Q(a, x) (Numerical Recipes style).
 
-import type { ChiSquareResult } from "@powerball/shared";
+import type { ChiSquareResult } from "./api";
+import { WHITE_COUNT, WHITE_MAX } from "./game";
 
 const LANCZOS = [
   676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059,
@@ -93,4 +94,34 @@ export function chiSquareUniformTest(counts: readonly number[], perDraw = 1): Ch
   const factor = perDraw > 1 ? (categories - 1) / (categories - perDraw) : 1;
   const statistic = raw * factor;
   return { statistic, degreesOfFreedom, pValue: chiSquareSurvival(statistic, degreesOfFreedom) };
+}
+
+export interface SumProbability {
+  sum: number;
+  probability: number;
+}
+
+/**
+ * Exact distribution of the sum of `count` distinct numbers drawn from 1..max, by dynamic
+ * programming over subsets: ways[k][s] = number of k-element subsets with sum s.
+ */
+export function sumDistribution(count: number = WHITE_COUNT, max: number = WHITE_MAX): SumProbability[] {
+  const maxSum = (count * (2 * max - count + 1)) / 2;
+  const minSum = (count * (count + 1)) / 2;
+  const ways = Array.from({ length: count + 1 }, () => new Array<number>(maxSum + 1).fill(0));
+  ways[0]![0] = 1;
+  for (let n = 1; n <= max; n++) {
+    // Iterate k downwards so each number is used at most once.
+    for (let k = Math.min(count, n); k >= 1; k--) {
+      const row = ways[k]!;
+      const prev = ways[k - 1]!;
+      for (let s = maxSum; s >= n; s--) row[s]! += prev[s - n]!;
+    }
+  }
+  const counts = ways[count]!;
+  let total = 0;
+  for (let s = minSum; s <= maxSum; s++) total += counts[s]!;
+  const result: SumProbability[] = [];
+  for (let s = minSum; s <= maxSum; s++) result.push({ sum: s, probability: counts[s]! / total });
+  return result;
 }

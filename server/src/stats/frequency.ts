@@ -1,4 +1,5 @@
 import {
+  chiSquareUniformTest,
   POWERBALL_MAX,
   WHITE_COUNT,
   WHITE_MAX,
@@ -6,7 +7,6 @@ import {
   type FrequencyResponse,
   type NumberFrequency,
 } from "@powerball/shared";
-import { chiSquareUniformTest } from "./chiSquare";
 
 export function countNumbers(draws: readonly DrawRecord[]): { whites: number[]; powerballs: number[] } {
   const whites = new Array<number>(WHITE_MAX).fill(0);

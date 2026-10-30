@@ -7,6 +7,8 @@ import type { Plugin } from "vite";
 // Relative import (not "@powerball/shared") so Vite bundles it into the config.
 import {
   checkTicket,
+  chiSquareUniformTest,
+  sumDistribution,
   PRIZE_TIERS,
   RULES_START_DATE,
   TICKET_PRICE,
@@ -15,7 +17,6 @@ import {
   type GapInfo,
   type NumberFrequency,
 } from "../../shared/src/index";
-import { chiSquarePValue, whiteSumDistribution } from "../src/lib/stats";
 
 interface RawDraw {
   draw_date: string;
@@ -45,14 +46,9 @@ function frequency(draws: DrawRecord[]) {
   }
   const make = (counts: number[], max: number, expected: number): NumberFrequency[] =>
     Array.from({ length: max }, (_, i) => ({ number: i + 1, count: counts[i + 1]!, expected }));
-  const test = (f: NumberFrequency[]) => {
-    const statistic = f.reduce((s, x) => s + (x.count - x.expected) ** 2 / x.expected, 0);
-    const df = f.length - 1;
-    return { statistic, degreesOfFreedom: df, pValue: chiSquarePValue(statistic, df) };
-  };
   const whites = make(w, 69, (draws.length * 5) / 69);
   const powerballs = make(p, 26, draws.length / 26);
-  return { drawCount: draws.length, whites, powerballs, whiteTest: test(whites), powerballTest: test(powerballs) };
+  return { drawCount: draws.length, whites, powerballs, whiteTest: chiSquareUniformTest(w.slice(1), 5), powerballTest: chiSquareUniformTest(p.slice(1)) };
 }
 
 function sums(draws: DrawRecord[]) {
@@ -66,7 +62,7 @@ function sums(draws: DrawRecord[]) {
   return {
     drawCount: draws.length,
     observed: [...counts].sort((a, b) => a[0] - b[0]).map(([sum, count]) => ({ sum, count })),
-    theoretical: whiteSumDistribution(),
+    theoretical: sumDistribution(),
     observedMean: total / draws.length,
     theoreticalMean: 175,
   };

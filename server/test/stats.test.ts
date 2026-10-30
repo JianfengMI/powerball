@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import { combinations, type DrawRecord } from "@powerball/shared";
 import { computeFrequency } from "../src/stats/frequency";
 import { computeGapInfo, computeGaps } from "../src/stats/gaps";
-import { computeSums, sumDistribution } from "../src/stats/sums";
+import { sumDistribution } from "@powerball/shared";
+import { computeSums } from "../src/stats/sums";
 import { PARSED } from "./fixtures";
 
 const draw = (date: string, whites: number[], powerball: number): DrawRecord => ({ date, whites, powerball });

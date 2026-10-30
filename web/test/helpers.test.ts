@@ -27,7 +27,6 @@ import {
   yearsForTickets,
 } from "../src/lib/format";
 import { jackpotComparisons } from "../src/lib/comparisons";
-import { chiSquarePValue, whiteSumDistribution } from "../src/lib/stats";
 
 function freqs(counts: number[]): NumberFrequency[] {
   return counts.map((count, i) => ({ number: i + 1, count, expected: 0 }));
@@ -140,18 +139,3 @@ describe("jackpotComparisons", () => {
   });
 });
 
-describe("stats", () => {
-  it("chi-square p-values match known values", () => {
-    expect(chiSquarePValue(68, 68)).toBeCloseTo(0.4772, 3);
-    expect(chiSquarePValue(3.841, 1)).toBeCloseTo(0.05, 3);
-    expect(chiSquarePValue(37.65, 25)).toBeCloseTo(0.05, 3);
-  });
-
-  it("white-ball sum distribution is exact", () => {
-    const d = whiteSumDistribution();
-    expect(d[0]).toEqual({ sum: 15, probability: 1 / combinations(69, 5) });
-    expect(d.at(-1)!.sum).toBe(335);
-    expect(d.reduce((s, x) => s + x.probability, 0)).toBeCloseTo(1, 12);
-    expect(d.reduce((s, x) => s + x.sum * x.probability, 0)).toBeCloseTo(175, 9);
-  });
-});
