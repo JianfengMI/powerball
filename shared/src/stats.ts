@@ -1,8 +1,8 @@
 // Chi-square goodness-of-fit test, with the survival function implemented via the
 // regularized upper incomplete gamma function Q(a, x) (Numerical Recipes style).
 
-import type { ChiSquareResult } from "./api";
-import { WHITE_COUNT, WHITE_MAX } from "./game";
+import type { ChiSquareResult } from "./api.ts";
+import { WHITE_COUNT, WHITE_MAX } from "./game.ts";
 
 const LANCZOS = [
   676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059,

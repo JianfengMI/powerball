@@ -1,4 +1,4 @@
-import { POWERBALL_MAX, PRIZE_TIERS, WHITE_COUNT, WHITE_MAX, type PrizeTier } from "./game";
+import { POWERBALL_MAX, PRIZE_TIERS, WHITE_COUNT, WHITE_MAX, type PrizeTier } from "./game.ts";
 
 /** n choose k, exact for the small values used here. */
 export function combinations(n: number, k: number): number {

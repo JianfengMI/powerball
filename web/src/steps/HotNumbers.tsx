@@ -261,6 +261,9 @@ export function HotNumbers() {
   const sums = useApi("sums", (s) => api.sums(s));
   const gaps = useApi("gaps", (s) => api.gaps(s));
   const hot = freq.data ? deriveHotTicket(freq.data) : null;
+  // All three come from the same backend, so one failure usually means all fail: show a single notice.
+  const failed = [freq, sums, gaps].filter((r) => r.error);
+  const retryFailed = () => failed.forEach((r) => r.retry());
 
   return (
     <Step
@@ -268,10 +271,10 @@ export function HotNumbers() {
       title='Is anything "hot"?'
       lead="Some numbers have come up more than others. Does that mean anything? Here is every real draw, analyzed."
     >
+      {failed.length > 0 && <ApiErrorBox message={failed[0]!.error!} onRetry={retryFailed} />}
+
       {freq.loading && !freq.data ? (
         <Loading what="number frequencies" />
-      ) : freq.error ? (
-        <ApiErrorBox message={freq.error} onRetry={freq.retry} />
       ) : freq.data && hot ? (
         <>
           <h3>How often each white ball was drawn</h3>
@@ -291,13 +294,11 @@ export function HotNumbers() {
         </>
       ) : null}
 
-      <h3>The sum of the five white balls</h3>
       {sums.loading && !sums.data ? (
         <Loading what="sums" />
-      ) : sums.error ? (
-        <ApiErrorBox message={sums.error} onRetry={sums.retry} />
       ) : sums.data ? (
         <>
+          <h3>The sum of the five white balls</h3>
           <SumsChart sums={sums.data} />
           <Meaning>
             Add up the five white balls in a draw and you get a number from 15 to 335. Middle sums are far more common because
@@ -308,13 +309,13 @@ export function HotNumbers() {
         </>
       ) : null}
 
-      <h3>Gaps: numbers that are "overdue"</h3>
       {gaps.loading && !gaps.data ? (
         <Loading what="gaps" />
-      ) : gaps.error ? (
-        <ApiErrorBox message={gaps.error} onRetry={gaps.retry} />
       ) : gaps.data ? (
-        <GapsTable gaps={gaps.data} />
+        <>
+          <h3>Gaps: numbers that are "overdue"</h3>
+          <GapsTable gaps={gaps.data} />
+        </>
       ) : null}
 
       {freq.data && <HotTrap freq={freq.data} />}

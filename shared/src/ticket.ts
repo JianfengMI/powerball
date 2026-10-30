@@ -1,5 +1,5 @@
-import { findTier, POWERBALL_MAX, WHITE_COUNT, WHITE_MAX, type PrizeTier } from "./game";
-import { defaultSource, randomInt, sampleDistinct, type RandomSource } from "./rng";
+import { findTier, POWERBALL_MAX, WHITE_COUNT, WHITE_MAX, type PrizeTier } from "./game.ts";
+import { defaultSource, randomInt, sampleDistinct, type RandomSource } from "./rng.ts";
 
 /** A ticket or a draw: 5 white balls and 1 Powerball. */
 export interface Ticket {

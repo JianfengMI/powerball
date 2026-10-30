@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { mockApiPlugin } from "./dev/mockApi";
+import { mockApiPlugin } from "./dev/mockApi.ts";
 
 // `npm run dev`      -> proxies /api to the real backend on http://localhost:3000.
 // `npm run dev:mock` -> answers /api/* from data/draws.json inside the dev server instead.

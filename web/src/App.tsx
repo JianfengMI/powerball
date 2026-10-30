@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { quickPick } from "@powerball/shared";
-import { Step } from "./components/common";
+import { Loading, Step } from "./components/common";
 import { StepNav } from "./components/StepNav";
 import { DotGrid } from "./extras/DotGrid";
 import { ShareCard } from "./extras/ShareCard";
@@ -9,13 +9,24 @@ import type { SummaryResponse } from "@powerball/shared";
 import { api, useApi, type ApiState } from "./lib/api";
 import { formatDate, formatInt, type RunStory } from "./lib/format";
 import { asTicket, loadDraft, saveDraft, type DraftTicket } from "./lib/storage";
-import { History } from "./steps/History";
-import { HotNumbers } from "./steps/HotNumbers";
 import { Myths } from "./steps/Myths";
 import { Odds } from "./steps/Odds";
 import { PickNumbers } from "./steps/PickNumbers";
 import { PlayUntilWin } from "./steps/PlayUntilWin";
 import { WatchDraw } from "./steps/WatchDraw";
+
+// Steps 5 and 6 are the only users of Chart.js, so they load in a separate chunk.
+const History = lazy(() => import("./steps/History").then((m) => ({ default: m.History })));
+const HotNumbers = lazy(() => import("./steps/HotNumbers").then((m) => ({ default: m.HotNumbers })));
+
+/** Stands in for a lazy step while it loads, keeping its #step-N anchor in place for the nav. */
+function StepPlaceholder({ n, title }: { n: number; title: string }) {
+  return (
+    <Step n={n} title={title}>
+      <Loading what="this step" />
+    </Step>
+  );
+}
 
 function DataSource({ summary }: { summary: ApiState<SummaryResponse> }) {
   if (summary.error) {
@@ -81,8 +92,12 @@ export function App() {
         <WatchDraw ticket={ticket} onQuickPick={doQuickPick} />
         <Odds />
         <PlayUntilWin ticket={ticket} onQuickPick={doQuickPick} onResult={setStory} />
-        <History ticket={ticket} onQuickPick={doQuickPick} firstDate={summary.data?.firstDate} />
-        <HotNumbers />
+        <Suspense fallback={<StepPlaceholder n={5} title="Your numbers vs. history" />}>
+          <History ticket={ticket} onQuickPick={doQuickPick} firstDate={summary.data?.firstDate} />
+        </Suspense>
+        <Suspense fallback={<StepPlaceholder n={6} title='Is anything "hot"?' />}>
+          <HotNumbers />
+        </Suspense>
         <Myths />
         <Step n="extras" title="Extras" lead="A few more ways to feel the odds.">
           <SpotTheReal />

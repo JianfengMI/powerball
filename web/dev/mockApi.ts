@@ -16,7 +16,7 @@ import {
   type DrawRecord,
   type GapInfo,
   type NumberFrequency,
-} from "../../shared/src/index";
+} from "../../shared/src/index.ts";
 
 interface RawDraw {
   draw_date: string;
